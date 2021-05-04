@@ -32,18 +32,14 @@ class Contacts extends Component {
     const { value } = e.target;
     this.setState({ filter: value });
   };
-  getFilteredClients = () => {
-    return this.state.contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(this.state.filter.toLowerCase())
-    );
-  };
+
   render() {
     return (
       <>
         <ContactsForm addContact={this.addContact} />
         <ContactsFilter filter={this.state.filter} setFilter={this.setFilter} />
         <ContactsList
-          contacts={this.getFilteredClients()}
+          contacts={this.state.contacts}
           deleteClient={this.deleteClient}
         />
       </>
