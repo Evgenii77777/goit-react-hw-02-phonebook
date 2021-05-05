@@ -6,6 +6,8 @@ import ContactsFilter from "./contactsFilter/ContactsFilter";
 
 class Contacts extends Component {
   state = {
+    name: "",
+    number: "",
     contacts: [
       { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
       { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
@@ -15,7 +17,7 @@ class Contacts extends Component {
     filter: "",
   };
 
-  addContact = ({ contact }) => {
+  addContact = (contact) => {
     this.setState((prev) => {
       return {
         contacts: [...prev.contacts, { ...contact, id: uuidv4() }],
@@ -32,15 +34,33 @@ class Contacts extends Component {
     const { value } = e.target;
     this.setState({ filter: value });
   };
+  getFilteredClients = () => {
+    return this.state.contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(this.state.filter.toLocaleLowerCase())
+    );
+  };
+  checkDublicateName = (name) => {
+    const isDuplicate = this.state.contacts.some(
+      (contact) => contact.name === name
+    );
+    if (isDuplicate) {
+      alert(`${name} уже есть! `);
+      return;
+    }
+  };
 
   render() {
     return (
       <>
-        <ContactsForm addContact={this.addContact} />
+        <ContactsForm
+          addContact={this.addContact}
+          checkDublicateName={this.checkDublicateName}
+        />
         <ContactsFilter filter={this.state.filter} setFilter={this.setFilter} />
         <ContactsList
           contacts={this.state.contacts}
           deleteClient={this.deleteClient}
+          contacts={this.getFilteredClients()}
         />
       </>
     );

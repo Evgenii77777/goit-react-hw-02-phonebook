@@ -1,16 +1,12 @@
 import React, { Component } from "react";
+import { v4 as uuid } from "uuid";
 
 class ContactsForm extends Component {
   state = {
-    contacts: [
-      { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-      { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-      { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-      { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-    ],
-    filter: "",
     name: "",
     number: "",
+    filter: "",
+    id: uuid(),
   };
   onHandleChange = (e) => {
     const { name, value } = e.target;
@@ -19,6 +15,7 @@ class ContactsForm extends Component {
   onHandleSubmit = (e) => {
     e.preventDefault();
     this.props.addContact(this.state);
+    this.props.checkDublicateName(this.state.name);
     this.setState({
       name: "",
       number: "",
@@ -45,8 +42,8 @@ class ContactsForm extends Component {
             Number:
             <input
               onChange={this.onHandleChange}
+              value={this.state.number}
               type="tel"
-              value={this.state.tel}
               name="number"
               pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
               title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
