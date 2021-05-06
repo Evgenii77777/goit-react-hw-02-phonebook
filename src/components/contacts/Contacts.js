@@ -1,35 +1,75 @@
 import React, { Component } from "react";
 import ContactsForm from "./contactsForm/ContactsForm";
 import ContactsList from "./contactsList/ContactsList";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import ContactsFilter from "./contactsFilter/ContactsFilter";
+import axios from "axios";
 
 class Contacts extends Component {
   state = {
-    name: "",
-    number: "",
-    contacts: [
-      { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-      { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-      { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-      { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-    ],
+    contacts: [],
     filter: "",
   };
+  async componentDidMount() {
+    try {
+      const response = await axios.get(
+        `https://phonebook-e3785-default-rtdb.firebaseio.com/contacts.json`
+      );
 
-  addContact = (contact) => {
-    this.setState((prev) => {
-      return {
-        contacts: [...prev.contacts, { ...contact, id: uuidv4() }],
-      };
-    });
+      if (response.data) {
+        const contacts = Object.keys(response.data).map((key) => ({
+          ...response.data[key],
+          id: key,
+        }));
+        this.setState({ contacts });
+      } else return;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  addContact = async (contact) => {
+    try {
+      const response = await axios.post(
+        `https://phonebook-e3785-default-rtdb.firebaseio.com/contacts.json`,
+        contact
+      );
+      this.setState((prev) => {
+        return {
+          contacts: [...prev.contacts, { ...contact, id: response.data.name }],
+        };
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
-  deleteClient = (e) => {
+
+  deleteClient = async (e) => {
     const { id } = e.target;
-    this.setState({
-      contacts: this.state.contacts.filter((contact) => contact.id !== id),
-    });
+    try {
+      await axios.delete(
+        `https://phonebook-e3785-default-rtdb.firebaseio.com/contacts/${id}.json`
+      );
+      this.setState({
+        contacts: this.state.contacts.filter((contact) => contact.id !== id),
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  // addContact = (contact) => {
+  //   this.setState((prev) => {
+  //     return {
+  //       contacts: [...prev.contacts, { ...contact, id: uuidv4() }],
+  //     };
+  //   });
+  // };
+  // deleteClient = (e) => {
+  //   const { id } = e.target;
+  //   this.setState({
+  //     contacts: this.state.contacts.filter((contact) => contact.id !== id),
+  //   });
+  // };
   setFilter = (e) => {
     const { value } = e.target;
     this.setState({ filter: value });

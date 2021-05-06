@@ -1,12 +1,9 @@
 import React, { Component } from "react";
-import { v4 as uuid } from "uuid";
 
 class ContactsForm extends Component {
   state = {
     name: "",
     number: "",
-    filter: "",
-    id: uuid(),
   };
   onHandleChange = (e) => {
     const { name, value } = e.target;
