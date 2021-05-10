@@ -57,19 +57,6 @@ class Contacts extends Component {
     }
   };
 
-  // addContact = (contact) => {
-  //   this.setState((prev) => {
-  //     return {
-  //       contacts: [...prev.contacts, { ...contact, id: uuidv4() }],
-  //     };
-  //   });
-  // };
-  // deleteClient = (e) => {
-  //   const { id } = e.target;
-  //   this.setState({
-  //     contacts: this.state.contacts.filter((contact) => contact.id !== id),
-  //   });
-  // };
   setFilter = (e) => {
     const { value } = e.target;
     this.setState({ filter: value });
@@ -80,13 +67,7 @@ class Contacts extends Component {
     );
   };
   checkDublicateName = (name) => {
-    const isDuplicate = this.state.contacts.some(
-      (contact) => contact.name === name
-    );
-    if (isDuplicate) {
-      alert(`${name} уже есть! `);
-      return;
-    }
+    return this.state.contacts.some((contact) => contact.name === name);
   };
 
   render() {

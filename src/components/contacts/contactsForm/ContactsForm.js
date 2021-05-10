@@ -11,8 +11,11 @@ class ContactsForm extends Component {
   };
   onHandleSubmit = (e) => {
     e.preventDefault();
+    if (this.props.checkDublicateName(this.state.name)) {
+      alert(`${this.state.name} уже есть! `);
+      return;
+    }
     this.props.addContact(this.state);
-    this.props.checkDublicateName(this.state.name);
     this.setState({
       name: "",
       number: "",
