@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import ContactsForm from "./contactsForm/ContactsForm";
 import ContactsList from "./contactsList/ContactsList";
-// import { v4 as uuidv4 } from "uuid";
 import ContactsFilter from "./contactsFilter/ContactsFilter";
 import axios from "axios";
+import {
+  addContact,
+  deleteContact,
+  getFiltered,
+  getAllContacts,
+} from "../../redux/contactsAction";
+import { connect } from "react-redux";
 
 class Contacts extends Component {
-  state = {
-    contacts: [],
-    filter: "",
-  };
   async componentDidMount() {
     try {
       const response = await axios.get(
@@ -21,53 +23,55 @@ class Contacts extends Component {
           ...response.data[key],
           id: key,
         }));
-        this.setState({ contacts });
+        // this.setState({ contacts });
+        this.props.getAllContacts(contacts);
       } else return;
     } catch (error) {
       console.log(error);
     }
   }
   addContact = async (contact) => {
-    try {
-      const response = await axios.post(
-        `https://phonebook-e3785-default-rtdb.firebaseio.com/contacts.json`,
-        contact
-      );
-      this.setState((prev) => {
-        return {
-          contacts: [...prev.contacts, { ...contact, id: response.data.name }],
-        };
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await axios.post(
+      `https://phonebook-e3785-default-rtdb.firebaseio.com/contacts.json`,
+      contact
+    );
+    this.props.addContact({ ...contact, id: response.data.name });
+    //   this.setState((prev) => {
+    //     return {
+    //       contacts: [...prev.contacts, { ...contact, id: response.data.name }],
+    //     };
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
-  deleteClient = async (e) => {
+  deleteContact = async (e) => {
     const { id } = e.target;
-    try {
-      await axios.delete(
-        `https://phonebook-e3785-default-rtdb.firebaseio.com/contacts/${id}.json`
-      );
-      this.setState({
-        contacts: this.state.contacts.filter((contact) => contact.id !== id),
-      });
-    } catch (error) {
-      console.log(error);
-    }
+
+    await axios.delete(
+      `https://phonebook-e3785-default-rtdb.firebaseio.com/contacts/${id}.json`
+    );
+    this.props.deleteContact(id);
+    //   this.setState({
+    //     contacts: this.state.contacts.filter((contact) => contact.id !== id),
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   setFilter = (e) => {
     const { value } = e.target;
-    this.setState({ filter: value });
+    this.props.getFiltered(value);
   };
-  getFilteredClients = () => {
-    return this.state.contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(this.state.filter.toLocaleLowerCase())
+  getFilteredContacts = () => {
+    return this.props.contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(this.props.filter.toLocaleLowerCase())
     );
   };
   checkDublicateName = (name) => {
-    return this.state.contacts.some((contact) => contact.name === name);
+    return this.props.contacts.some((contact) => contact.name === name);
   };
 
   render() {
@@ -77,15 +81,37 @@ class Contacts extends Component {
           addContact={this.addContact}
           checkDublicateName={this.checkDublicateName}
         />
-        <ContactsFilter filter={this.state.filter} setFilter={this.setFilter} />
+        <ContactsFilter filter={this.props.filter} setFilter={this.setFilter} />
         <ContactsList
-          contacts={this.state.contacts}
-          deleteClient={this.deleteClient}
-          contacts={this.getFilteredClients()}
+          contacts={this.props.contacts}
+          deleteClient={this.deleteContact}
+          contacts={this.getFilteredContacts()}
         />
       </>
     );
   }
 }
 
-export default Contacts;
+const mapStateToProps = (state) => {
+  return {
+    contacts: state.contacts,
+    filter: state.filter,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getAllContacts: (contacts) => {
+      dispatch(getAllContacts(contacts));
+    },
+    addContact: (contacts) => {
+      dispatch(addContact(contacts));
+    },
+    deleteContact: (contacts) => {
+      dispatch(deleteContact(contacts));
+    },
+    getFiltered: (contacts) => {
+      dispatch(getFiltered(contacts));
+    },
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Contacts);
