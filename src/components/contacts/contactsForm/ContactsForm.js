@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { resetError } from "../../../redux/contactsAction";
+import { errorSelector } from "../../../redux/contactsSelectors";
 
 class ContactsForm extends Component {
   state = {
@@ -6,6 +9,7 @@ class ContactsForm extends Component {
     number: "",
   };
   onHandleChange = (e) => {
+    this.props.error && this.props.resetError();
     const { name, value } = e.target;
     this.setState({ [name]: value });
   };
@@ -56,5 +60,9 @@ class ContactsForm extends Component {
     );
   }
 }
-
-export default ContactsForm;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    error: errorSelector(state),
+  };
+};
+export default connect(mapStateToProps, { resetError })(ContactsForm);
