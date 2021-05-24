@@ -6,14 +6,8 @@ import {
   setContactLoading,
   setError,
 } from "./contactsAction";
-import { getContactsSelector } from "./contactsSelectors";
 
 const addContactOperation = (contact) => async (dispatch, getState) => {
-  // const contacts = getContactsSelector(getState);
-  // if (contacts.some((item) => item.name.toLowerCase().includes(contact.name.toLowerCase()))) {
-  //   dispatch(setError("Такой контакт уже есть"));
-  //   return;
-  // }
   dispatch(setContactLoading());
   try {
     const response = await axios.post(

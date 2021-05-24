@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { resetError } from "../../../redux/contactsAction";
 import { errorSelector } from "../../../redux/contactsSelectors";
+import { Button } from "@material-ui/core";
 
 class ContactsForm extends Component {
   state = {
@@ -54,7 +55,10 @@ class ContactsForm extends Component {
               required
             />
           </label>
-          <button type="submit">Add contact</button>
+          {/* <button type="submit">Add contact</button> */}
+          <Button type="submit" variant="contained" color="primary">
+            Add contact
+          </Button>
         </form>
       </>
     );

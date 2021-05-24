@@ -1,7 +1,6 @@
 import React from "react";
 
-
-const ContactsList = ({ contacts, deleteClient }) => {
+const ContactsList = ({ contacts, deleteContact }) => {
   return (
     <>
       <ul>
@@ -10,7 +9,7 @@ const ContactsList = ({ contacts, deleteClient }) => {
           <li key={contact.id}>
             <p>{contact.name}</p>
             <p>{contact.number}</p>
-            <button onClick={deleteClient} type="button" id={contact.id}>
+            <button onClick={deleteContact} type="button" id={contact.id}>
               Delete
             </button>
           </li>

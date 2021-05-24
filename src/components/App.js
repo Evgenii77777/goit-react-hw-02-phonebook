@@ -1,10 +1,12 @@
 import React from "react";
-import Contacts from "./contacts/Contacts";
+import Header from "./header/Header";
+import Main from "./main/Main";
 
 const App = () => {
   return (
     <>
-      <Contacts />
+      <Header />
+      <Main />
     </>
   );
 };
