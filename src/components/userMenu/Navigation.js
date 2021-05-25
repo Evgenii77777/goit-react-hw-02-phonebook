@@ -1,11 +1,20 @@
 import React from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { logOut } from "../../redux/auth/authActions";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+
+import {
+  getAuthsSelector,
+  getEmailSelector,
+} from "../../redux/auth/authSelectors";
 import mainRoutes from "../../routes/mainRoutes";
 import NavigationItem from "./NavigationItem";
 import UserMenu from "./UserMenu";
-const Navigation = ({ location, isAuth, logOut, email }) => {
+
+const Navigation = () => {
+  const isAuth = useSelector(getAuthsSelector);
+  const email = useSelector(getEmailSelector);
+  const location = useLocation();
+
   return (
     <>
       <ul>
@@ -17,17 +26,10 @@ const Navigation = ({ location, isAuth, logOut, email }) => {
             key={item.path}
           />
         ))}
-        {isAuth && <UserMenu logOut={logOut} email={email} />}
+        {isAuth && <UserMenu email={email} />}
       </ul>
     </>
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    isAuth: state.auth.token.idToken,
-    email: state.auth.token.email,
-  };
-};
-
-export default connect(mapStateToProps, { logOut })(withRouter(Navigation));
+export default Navigation;

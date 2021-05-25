@@ -16,6 +16,7 @@ export const itemsReducer = createReducer([], {
     ...state.filter((product) => product.id !== payload),
   ],
 });
+
 export const filterReducer = createReducer("", {
   [getFiltered]: (_, { payload }) => payload,
 });

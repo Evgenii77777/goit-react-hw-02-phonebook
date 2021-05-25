@@ -1,7 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { getAuthsSelector } from "../../redux/auth/authSelectors";
 
-const NavigationItem = ({ item, location, isAuth }) => {
+const NavigationItem = ({ item }) => {
+  const isAuth = useSelector(getAuthsSelector);
+  const location = useLocation();
   return (
     <>
       {!item.isPrivate && !item.isRestricted && (

@@ -37,9 +37,6 @@ class AuthForm extends Component {
                 Password
                 <Field type="password" name="password" />
                 <ErrorMessage name="password" component="div" />
-                {/* <button type="submit" disabled={isSubmitting}>
-                  Submit
-                </button> */}
                 <Button
                   type="submit"
                   disabled={isSubmitting}
